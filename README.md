@@ -18,3 +18,17 @@ Where do the wallets come from? just run a ganache and make your life easier.
 Maybe, later I can try to add some features so that the execution will cost some ERC20 tokens to be paid to another party(service provider's wallet address or smart contract)
 
 maybe, just maybe I can make a server which controls the multisig wallet address with EIP712 signed transaction... then need verification functions on the Multisig wallet so may be a pain in the ass. Well still, it is just maybe. Maybe I just won't and move on to sth else.
+
+05:04
+Made '.env'file with 6 private keys from ganache in it.
+
+I think I need to download openzeppelin lib to node_module, make a mintable ERC20 token
+and downgrade multisig
+
+    npm install --save-dev @openzeppelin/contracts
+
+
+
+
+
+
