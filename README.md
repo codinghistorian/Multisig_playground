@@ -1,3 +1,9 @@
+22 2nd March 20:14 KST
+So it works to mint ERC20 token having Multisig wallet as owner.
+Execution with 3 or more approval also works.
+Just need to put in the right bytes data which includes information about function and parameters.
+Further documentation and testing script needed, but I need to go make a wallet, so I will do it later.
+
 22 2nd March 04:46 KST
 
 this multisig contract is from the Smart Contract Engineer challenges.
