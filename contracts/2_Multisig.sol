@@ -25,25 +25,25 @@ contract MultiSigWallet {
     // mapping from tx id => owner => bool
     mapping(uint => mapping(address => bool)) public approved;
 
-    modifier onlyOwner() {
-        require(isOwner[msg.sender], "not owner");
-        _;
-    }
+    // modifier onlyOwner() {
+    //     require(isOwner[msg.sender], "not owner");
+    //     _;
+    // }
 
-    modifier txExists(uint _txId) {
-        require(_txId < transactions.length, "tx does not exist");
-        _;
-    }
+    // modifier txExists(uint _txId) {
+    //     require(_txId < transactions.length, "tx does not exist");
+    //     _;
+    // }
 
-    modifier notApproved(uint _txId) {
-        require(!approved[_txId][msg.sender], "tx already approved");
-        _;
-    }
+    // modifier notApproved(uint _txId) {
+    //     require(!approved[_txId][msg.sender], "tx already approved");
+    //     _;
+    // }
 
-    modifier notExecuted(uint _txId) {
-        require(!transactions[_txId].executed, "tx already executed");
-        _;
-    }
+    // modifier notExecuted(uint _txId) {
+    //     require(!transactions[_txId].executed, "tx already executed");
+    //     _;
+    // }
 
     constructor(address[] memory _owners, uint _required) {
         require(_owners.length > 0, "owners required");
