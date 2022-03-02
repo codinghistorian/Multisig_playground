@@ -23,9 +23,9 @@ async function main() {
 //     _mint(to, amount);
 // }
 
-  var result = await erc20.mint(wallet0.address, 111111111111);
-  await result.wait();
-  console.log(result);
+  // var result = await erc20.mint(wallet0.address, 111111111111);
+  // await result.wait();
+  // console.log(result);
 
   const totalSupply = await erc20.totalSupply();
   console.log("totalSupply of target token is " + totalSupply);

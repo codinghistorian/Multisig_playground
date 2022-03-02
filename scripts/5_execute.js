@@ -3,22 +3,18 @@ const fs = require('fs');
 const path = require('path');
 require("dotenv").config();
 
+let rawdata = fs.readFileSync('addresses.json');
+let addresses = JSON.parse(rawdata);
+
+  const target = {
+    address : addresses.target
+  };
+  const multiSigAdd = {
+    address : addresses.multiSig
+  };
+
 async function main() {
-  const ERC20 = await hre.ethers.getContractFactory("Target");
-  const erc20 = await ERC20.deploy();
-
-  await erc20.deployed();
-
-  console.log("Target ERC20 token deployed to : ", erc20.address);
-
-  //220302 05:19 KST
-  //need array of addresses(string) and minimum required aproval as uint when deploying
-  //Multisig contract.
-  //Ah.. should I just copy paste public addresses or make address from private key...is..upto me
-  //I will think tomorrow.
-  //14:33 KST
-  //Yeah, lets just get them wallet addresses from private key.
-
+  // const ReceiverV8Artifact = require('../artifacts/contracts/4_ReceiverV8.sol/ReceiverV8.json');
   const url = "http://localhost:7545";
   const privateKey0 = process.env.PRIVATE_KEY0;
   const privateKey1 = process.env.PRIVATE_KEY1;
@@ -27,7 +23,8 @@ async function main() {
   const privateKey4 = process.env.PRIVATE_KEY4;
   const privateKey5 = process.env.PRIVATE_KEY5;
 
-  const provider = new ethers.providers.JsonRpcProvider(url)
+  const provider = new ethers.providers.JsonRpcProvider(url);
+
   const wallet0 = new ethers.Wallet(privateKey0,provider);
   const wallet1 = new ethers.Wallet(privateKey1,provider);
   const wallet2 = new ethers.Wallet(privateKey2,provider);
@@ -35,30 +32,33 @@ async function main() {
   const wallet4 = new ethers.Wallet(privateKey4,provider);
   const wallet5 = new ethers.Wallet(privateKey5,provider);
 
-  let owners = [
-    wallet0.address,
-    wallet1.address,
-    wallet2.address,
-    wallet3.address,
-    wallet4.address,
-    wallet5.address,
-  ]
-  console.log
 
-  const MultiSig = await hre.ethers.getContractFactory("MultiSigWallet");
-  const multiSig = await MultiSig.deploy(owners, 3);
 
-  await multiSig.deployed();
+  const multiSig = require('../artifacts/contracts/2_Multisig.sol/MultiSigWallet.json');
 
-  console.log("Multisig wallet deplyed to : ", multiSig.address);
+  const abiMultiSig = multiSig.abi;
 
-  let addresses = { 
-    target: erc20.address,
-    multiSig: multiSig.address, 
-  };
-  
-  let data = JSON.stringify(addresses);
-  fs.writeFileSync('addresses.json', data);
+  const MultisigW0 = new ethers.Contract(multiSigAdd.address,abiMultiSig,wallet0);
+  const MultisigW1 = new ethers.Contract(multiSigAdd.address,abiMultiSig,wallet1);
+  const MultisigW2 = new ethers.Contract(multiSigAdd.address,abiMultiSig,wallet2);
+  const MultisigW3 = new ethers.Contract(multiSigAdd.address,abiMultiSig,wallet3);
+  const MultisigW4 = new ethers.Contract(multiSigAdd.address,abiMultiSig,wallet4);
+  const MultisigW5 = new ethers.Contract(multiSigAdd.address,abiMultiSig,wallet5);
+
+  // function execute(uint _txId) external 
+
+  var executeW0 = await MultisigW0.execute(2);
+  await executeW0.wait();
+  console.log(executeW0);
+
+  //220302 19:10 now that this is approved only once, execute should not work.
+  //Desired error will be "not eough approvals"
+  //19:12 Yep, not enough approvals. Let's see what kind of error will happen when there are
+  // enough approvals
+  //19:15 3 more approvals done. Let's now see what happens.
+  // okay good. revert tx failed from the line below.
+  // require(success, "tx failed");
+  //Now I need to put the right data in.
 }
 
 main()
